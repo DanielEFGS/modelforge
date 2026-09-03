@@ -1,0 +1,38 @@
+name: ModelForge task
+description: Track a scoped implementation, defect, or maintenance task.
+title: '[Task]: '
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: Confirm that the request belongs to the active phase in `TASKS.md`.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Required outcome
+      description: Describe observable behavior, not only implementation details.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] Deterministic behavior is covered by tests
+        - [ ] Privacy and IR boundaries remain intact
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics and fixtures
+      description: List expected diagnostics, golden fixtures, or compile fixtures.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope checks
+      options:
+        - label: This task is in the active phase or `TASKS.md` was intentionally updated.
+          required: true
+        - label: No source JSON, field name, model data, or generated code will be transmitted.
+          required: true

@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "modelforge",
+  "compatibility_date": "2026-08-31",
+  "routes": [
+    {
+      "pattern": "modelforge.daniel-gs.dev",
+      "custom_domain": true,
+    },
+  ],
+  "assets": {
+    "directory": "./apps/web/dist",
+    "not_found_handling": "404-page",
+  },
+}

@@ -1,0 +1,327 @@
+---
+import { ModelForgeWorkspace } from './ModelForgeWorkspace';
+import type { LandingKind } from '../lib/landing-i18n';
+
+interface Props {
+  kind: LandingKind;
+}
+const { kind } = Astro.props;
+const content = {
+  home: {
+    h1: 'JSON model generation you can inspect',
+    lead: 'Turn JSON into deterministic TypeScript, Java, Spring Boot, C#, or Python models without sending source data away.',
+    target: 'typescript' as const,
+    title: 'How ModelForge compiles JSON',
+    body: 'ModelForge parses JSON into a universal intermediate model first. You can inspect names, types, optionality, null evidence, and semantic hints before any target generator runs.',
+    notes: [
+      'One IR feeds every supported target.',
+      'The same input and options produce byte-equivalent output.',
+      'No account, backend, or AI conversion service is involved.',
+    ],
+    faq: [
+      [
+        'Does my JSON leave the browser?',
+        'No. Parsing, inference, editing, and code generation run locally in the browser.',
+      ],
+      [
+        'Can I review uncertain inference?',
+        'Yes. Empty arrays, null-only fields, mixed evidence, and normalized names remain visible as diagnostics.',
+      ],
+    ],
+  },
+  typescript: {
+    h1: 'JSON to TypeScript generator',
+    lead: 'Generate interfaces, type aliases, or classes from inspectable JSON inference—locally and deterministically.',
+    target: 'typescript' as const,
+    title: 'TypeScript mapping without hidden guesses',
+    body: 'JSON integers and numbers map to number, unknown evidence stays unknown, and optionality remains separate from nullability. Date-like strings stay strings unless you explicitly select Date mapping.',
+    notes: [
+      'Interfaces, type aliases, and classes.',
+      'Readonly, optional, null, array, and date policies.',
+      'Dependency-safe nested model ordering.',
+    ],
+    faq: [
+      [
+        'Does the generator use any?',
+        'No. Unknown evidence maps to unknown by default.',
+      ],
+      [
+        'Are date strings converted automatically?',
+        'No. Date and datetime matches are non-destructive hints; string remains the safe default.',
+      ],
+    ],
+  },
+  java: {
+    h1: 'JSON to Java class generator',
+    lead: 'Build compiling POJOs, records, or Lombok models from a target-neutral intermediate representation.',
+    target: 'java' as const,
+    title: 'Java models with explicit type policies',
+    body: 'ModelForge uses boxed Java types for API-shaped data, stable imports, and configurable constructors and accessors. Collections and java.time mappings are generated only from visible IR evidence and options.',
+    notes: [
+      'Plain POJO, record, and Lombok targets.',
+      'Long, Double, Boolean, List, LocalDate, and OffsetDateTime mappings.',
+      'Generated fixture sources are compiled in the release gate.',
+    ],
+    faq: [
+      [
+        'Why are numeric types boxed?',
+        'JSON samples often contain nullable or incomplete evidence, so boxed types are the safer model default.',
+      ],
+      [
+        'Can it generate Lombok?',
+        'Yes. Getter, setter, builder, and constructor annotations are configurable.',
+      ],
+    ],
+  },
+  csharp: {
+    h1: 'JSON to C# model generator',
+    lead: 'Generate nullable-aware C# classes or records with explicit System.Text.Json property mappings.',
+    target: 'csharp' as const,
+    title: 'C# models with visible JSON contracts',
+    body: 'ModelForge maps JSON evidence through the Universal Model IR into C# classes or records. Property aliases preserve original JSON names while nullable reference types keep missing and null evidence visible.',
+    notes: [
+      'Sealed classes and property records.',
+      'System.Text.Json property aliases and nullable types.',
+      'Long, double, bool, List, DateOnly, and DateTimeOffset mappings.',
+    ],
+    faq: [
+      [
+        'Why are JsonPropertyName attributes generated?',
+        'C# property naming conventions can differ from source JSON names, so explicit aliases preserve the wire contract.',
+      ],
+      [
+        'Is this target compiler-verified?',
+        'Golden fixtures are active, but verified status remains off until the recorded .NET SDK fixture compiles in the release environment.',
+      ],
+    ],
+  },
+  python: {
+    h1: 'JSON to Python model generator',
+    lead: 'Generate Python data classes or Pydantic models with explicit optional, nullable, alias, and date policies.',
+    target: 'python' as const,
+    title: 'Python models without collapsed evidence',
+    body: 'Required, missing, and null observations remain independent before mapping to Python annotations and defaults. Source aliases are retained as dataclass metadata or Pydantic Field aliases.',
+    notes: [
+      'Standard-library dataclasses and Pydantic models.',
+      'Modern union syntax, nested models, lists, and datetime mappings.',
+      'Generated Python fixtures are syntax-compiled in the release gate.',
+    ],
+    faq: [
+      [
+        'Does optional always mean nullable?',
+        'The IR keeps those facts separate. Python defaults use None when a constructor field may be omitted, while required nullable fields remain required.',
+      ],
+      [
+        'Does Pydantic coercion happen silently?',
+        'No generator inference depends on Pydantic coercion. Strict mode is an explicit generator option in the package contract.',
+      ],
+    ],
+  },
+  spring: {
+    h1: 'JSON to Spring Boot models',
+    lead: 'Generate version-profiled JPA entities, DTOs, and Spring Data repositories for Boot 3.5.x or 4.1.x.',
+    target: 'spring' as const,
+    title: 'Spring output tied to verified profiles',
+    body: 'Spring compatibility is not a label pasted onto generic Java. Version profiles own Java ranges and verification metadata, while the adapter adds Jakarta Persistence and Spring Data semantics after core Java generation.',
+    notes: [
+      'Verified profiles: Spring Boot 3.5.16 and 4.1.1.',
+      'Java compatibility is checked before generation.',
+      'Repository generation requires an explicitly selected scalar identifier.',
+    ],
+    faq: [
+      [
+        'Will a field named id automatically become @Id?',
+        'No. Arbitrary JSON cannot prove a database primary key, so identifier selection is explicit.',
+      ],
+      [
+        'What does verified mean?',
+        'The recorded profile’s Maven fixture compiled successfully against the exact Spring Boot patch.',
+      ],
+    ],
+  },
+}[kind];
+const structuredData = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'ModelForge',
+  description: content.lead,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+});
+---
+
+<h1 class="sr-only" data-landing-h1>{content.h1}</h1>
+<ModelForgeWorkspace client:load initialTarget={content.target} />
+<section class="landing-content" data-landing-kind={kind}>
+  <div>
+    <span class="section-label" data-landing-label>COMPILER NOTES</span><h2
+      data-landing-title
+    >
+      {content.title}
+    </h2><p data-landing-body>
+      {content.body}
+    </p>
+  </div>
+  <ul>{content.notes.map((note) => <li data-landing-note>{note}</li>)}</ul>
+  <div class="faq">
+    <h2 data-landing-faq-title>Common questions</h2>{
+      content.faq.map(([question, answer], index) => (
+        <details>
+          <>
+            <summary data-landing-question={index}>{question}</summary>
+            <p data-landing-answer={index}>{answer}</p>
+          </>
+        </details>
+      ))
+    }
+  </div>
+  <nav class="related" aria-label="Related converters" data-landing-related>
+    <a href="/json-to-typescript">JSON to TypeScript</a><a href="/json-to-java"
+      >JSON to Java</a
+    ><a href="/json-to-spring-boot">JSON to Spring Boot</a>
+    <a href="/json-to-csharp">JSON to C#</a>
+    <a href="/json-to-python">JSON to Python</a>
+  </nav>
+</section>
+<script is:inline type="application/ld+json" set:html={structuredData} />
+
+<script>
+  import { getLandingTranslation, type LandingKind } from '../lib/landing-i18n';
+  import { isLocale, resolveLocale, type Locale } from '../lib/i18n';
+
+  const originalText = new WeakMap<Element, string>();
+  const originalAria = new WeakMap<Element, string>();
+
+  function setText(element: Element | null, value?: string) {
+    if (!element) return;
+    if (!originalText.has(element)) {
+      originalText.set(element, element.textContent ?? '');
+    }
+    element.textContent = value ?? originalText.get(element) ?? '';
+  }
+
+  function applyLandingLocale(locale: Locale) {
+    document
+      .querySelectorAll<HTMLElement>('[data-landing-kind]')
+      .forEach((section) => {
+        const kind = section.dataset.landingKind as LandingKind;
+        const translation = getLandingTranslation(kind, locale);
+        setText(
+          document.querySelector('[data-landing-h1]'),
+          translation?.title,
+        );
+        setText(
+          section.querySelector('[data-landing-label]'),
+          translation?.compilerNotes,
+        );
+        setText(
+          section.querySelector('[data-landing-title]'),
+          translation?.title,
+        );
+        setText(
+          section.querySelector('[data-landing-body]'),
+          translation?.body,
+        );
+        section
+          .querySelectorAll('[data-landing-note]')
+          .forEach((note, index) => setText(note, translation?.notes[index]));
+        setText(
+          section.querySelector('[data-landing-faq-title]'),
+          translation?.commonQuestions,
+        );
+        section
+          .querySelectorAll('[data-landing-question]')
+          .forEach((question, index) =>
+            setText(question, translation?.faq[index]?.[0]),
+          );
+        section
+          .querySelectorAll('[data-landing-answer]')
+          .forEach((answer, index) =>
+            setText(answer, translation?.faq[index]?.[1]),
+          );
+
+        const related = section.querySelector('[data-landing-related]');
+        if (related) {
+          if (!originalAria.has(related)) {
+            originalAria.set(related, related.getAttribute('aria-label') ?? '');
+          }
+          related.setAttribute(
+            'aria-label',
+            translation?.relatedConverters ?? originalAria.get(related) ?? '',
+          );
+        }
+      });
+  }
+
+  const storedLocale = localStorage.getItem('modelforge-locale');
+  applyLandingLocale(
+    isLocale(storedLocale)
+      ? storedLocale
+      : resolveLocale(globalThis.navigator.languages),
+  );
+  globalThis.addEventListener('modelforge:locale-change', (event) => {
+    const locale = (event as CustomEvent<Locale>).detail;
+    if (isLocale(locale)) applyLandingLocale(locale);
+  });
+</script>
+
+<style>
+  .section-label {
+    color: var(--route-primary);
+    font: 700 0.66rem var(--font-code);
+    letter-spacing: 0.1em;
+  }
+  .landing-content {
+    width: min(calc(100% - 2rem), 70rem);
+    margin: 2rem auto 4rem;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2rem 4rem;
+  }
+  .landing-content h2 {
+    color: var(--ink-strong);
+    margin: 0.35rem 0 0.65rem;
+  }
+  .landing-content p,
+  .landing-content li {
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+  .landing-content ul {
+    margin: 1.6rem 0 0;
+    padding-left: 1.2rem;
+  }
+  .faq {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--line-soft);
+    padding-top: 1.5rem;
+  }
+  details {
+    border-bottom: 1px solid var(--line-soft);
+    padding: 0.8rem 0;
+  }
+  summary {
+    cursor: pointer;
+    color: var(--ink-strong);
+    font-weight: 700;
+  }
+  .related {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .related a {
+    color: var(--route-primary);
+    border: 1px solid var(--line-soft);
+    padding: 0.55rem 0.7rem;
+    text-decoration: none;
+  }
+  @media (max-width: 48rem) {
+    .landing-content {
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+    }
+  }
+</style>

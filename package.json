@@ -1,0 +1,48 @@
+{
+  "name": "modelforge",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.24.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "corepack pnpm --filter @modelforge/web dev",
+    "build": "corepack pnpm -r --if-present build",
+    "build:cloudflare": "node scripts/validate-public-site-url.mjs && corepack pnpm build",
+    "cloudflare:preview": "corepack pnpm build && wrangler dev",
+    "cloudflare:dry-run": "node scripts/validate-public-site-url.mjs && corepack pnpm build && wrangler deploy --dry-run",
+    "cloudflare:deploy": "node scripts/validate-public-site-url.mjs && corepack pnpm build && wrangler deploy",
+    "typecheck": "corepack pnpm -r --if-present typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@emnapi/core": "1.11.3",
+    "@emnapi/runtime": "1.11.3",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.6",
+    "@vitejs/plugin-react": "6.1.0",
+    "eslint": "10.9.1",
+    "eslint-plugin-astro": "3.1.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.5",
+    "globals": "17.11.0",
+    "jsdom": "30.0.1",
+    "prettier": "3.9.6",
+    "prettier-plugin-astro": "0.14.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.68.0",
+    "vitest": "4.1.11",
+    "wrangler": "4.127.1"
+  }
+}

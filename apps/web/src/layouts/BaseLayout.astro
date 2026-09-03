@@ -1,0 +1,469 @@
+---
+import { createMetadata } from '../lib/metadata';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  pathname: string;
+}
+
+const { title, description, pathname } = Astro.props;
+const siteUrl = Astro.site ?? new URL('https://modelforge.example');
+const metadata = createMetadata({ title, description, pathname, siteUrl });
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={metadata.description} />
+    <link rel="canonical" href={metadata.canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content={metadata.openGraph.type} />
+    <meta property="og:title" content={metadata.openGraph.title} />
+    <meta property="og:description" content={metadata.openGraph.description} />
+    <meta property="og:url" content={metadata.openGraph.url} />
+    <meta property="og:image" content={new URL('/social-card.svg', siteUrl)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL('/social-card.svg', siteUrl)} />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add('app-booting');
+        const savedTheme = localStorage.getItem('modelforge-theme');
+        const useDark = savedTheme
+          ? savedTheme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = useDark ? 'dark' : 'light';
+
+        const supported = [
+          'en',
+          'es',
+          'pt-BR',
+          'de',
+          'ru',
+          'zh-CN',
+          'ja',
+          'ko',
+        ];
+        const candidate =
+          localStorage.getItem('modelforge-locale') || navigator.languages?.[0];
+        const normalized = candidate?.toLowerCase() || 'en';
+        const locale = normalized.startsWith('pt')
+          ? 'pt-BR'
+          : normalized.startsWith('zh')
+            ? 'zh-CN'
+            : supported.find(
+                (item) => item.toLowerCase() === normalized.split('-')[0],
+              ) || 'en';
+        root.lang = locale;
+      })();
+    </script>
+    <title>{metadata.title}</title>
+  </head>
+  <body>
+    <div class="startup-overlay" aria-hidden="true">
+      <div class="startup-mark">
+        <img src="/favicon.svg" width="44" height="44" alt="" />
+        <span><i></i><i></i><i></i></span>
+      </div>
+    </div>
+    <!--
+    THESIS: ModelForge makes every deterministic transformation inspectable; it refuses the generic three-card converter.
+    OWN-WORLD: Pale mineral inspection surfaces, etched teal routes, copper contacts, clipped seams, and safety orange only for commit actions.
+    STORY: Paste JSON, inspect the dominant model evidence, choose a target, and generate local code with the full route visible.
+    FIRST VIEWPORT: A compact control rail spans a narrow Source bay, a dominant central Model inspector, and a narrow Output bay; Generate terminates the lower-right routing bus.
+    FORM: Silicon Inspection, grounded direction 1 and approved model-first composition; seed 05e877a2.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+    -->
+    <header class="site-header">
+      <div class="header-brand">
+        <a class="wordmark" href="/" aria-label="ModelForge home">
+          <img src="/favicon.svg" width="28" height="28" alt="" />
+          ModelForge
+        </a>
+        <span class="local-only"
+          ><i></i><span data-shell-copy="localOnly">Local only</span></span
+        >
+      </div>
+      <span class="product-line" data-shell-copy="productLine"
+        >JSON → IR → deterministic code</span
+      >
+    </header>
+    <slot />
+    <footer class="site-footer">
+      <span data-shell-copy="footer"
+        >Deterministic code generation, local to your browser.</span
+      >
+      <nav aria-label="Legal" data-shell-copy-aria="legal">
+        <a href="/privacy" data-shell-copy="privacy">Privacy</a><a
+          href="/cookies"
+          data-shell-copy="cookies">Cookies</a
+        ><a href="/terms" data-shell-copy="terms">Terms</a><a
+          href="/generated-code-disclaimer"
+          data-shell-copy="disclaimer">Code disclaimer</a
+        >
+      </nav>
+    </footer>
+    <script is:inline>
+      (() => {
+        const copy = {
+          en: [
+            'Local only',
+            'JSON → IR → deterministic code',
+            'Deterministic code generation, local to your browser.',
+            'Legal',
+            'Privacy',
+            'Cookies',
+            'Terms',
+            'Code disclaimer',
+          ],
+          es: [
+            'Solo local',
+            'JSON → IR → código determinista',
+            'Generación determinista de código, local en tu navegador.',
+            'Legal',
+            'Privacidad',
+            'Cookies',
+            'Términos',
+            'Aviso sobre el código',
+          ],
+          'pt-BR': [
+            'Somente local',
+            'JSON → IR → código determinístico',
+            'Geração determinística de código, local no seu navegador.',
+            'Legal',
+            'Privacidade',
+            'Cookies',
+            'Termos',
+            'Aviso sobre o código',
+          ],
+          de: [
+            'Nur lokal',
+            'JSON → IR → deterministischer Code',
+            'Deterministische Codegenerierung, lokal in deinem Browser.',
+            'Rechtliches',
+            'Datenschutz',
+            'Cookies',
+            'Bedingungen',
+            'Code-Hinweis',
+          ],
+          ru: [
+            'Только локально',
+            'JSON → IR → детерминированный код',
+            'Детерминированная генерация кода локально в браузере.',
+            'Правовая информация',
+            'Конфиденциальность',
+            'Cookies',
+            'Условия',
+            'Отказ от ответственности',
+          ],
+          'zh-CN': [
+            '仅本地',
+            'JSON → IR → 确定性代码',
+            '在浏览器本地进行确定性代码生成。',
+            '法律信息',
+            '隐私',
+            'Cookies',
+            '条款',
+            '代码免责声明',
+          ],
+          ja: [
+            'ローカルのみ',
+            'JSON → IR → 決定的なコード',
+            'ブラウザ内でローカルに決定的なコードを生成します。',
+            '法的情報',
+            'プライバシー',
+            'Cookie',
+            '利用規約',
+            'コード免責事項',
+          ],
+          ko: [
+            '로컬 전용',
+            'JSON → IR → 결정적 코드',
+            '브라우저에서 로컬로 결정적 코드를 생성합니다.',
+            '법적 고지',
+            '개인정보',
+            '쿠키',
+            '약관',
+            '코드 면책 조항',
+          ],
+        };
+        const keys = [
+          'localOnly',
+          'productLine',
+          'footer',
+          'legal',
+          'privacy',
+          'cookies',
+          'terms',
+          'disclaimer',
+        ];
+        const resolve = (value) => {
+          if (value?.toLowerCase().startsWith('pt')) return 'pt-BR';
+          if (value?.toLowerCase().startsWith('zh')) return 'zh-CN';
+          const short = value?.split('-')[0];
+          return copy[short] ? short : 'en';
+        };
+        const apply = (locale) => {
+          const values = copy[locale] || copy.en;
+          document.documentElement.lang = locale;
+          keys.forEach((key, index) => {
+            document
+              .querySelectorAll(`[data-shell-copy="${key}"]`)
+              .forEach((node) => {
+                node.textContent = values[index];
+              });
+            document
+              .querySelectorAll(`[data-shell-copy-aria="${key}"]`)
+              .forEach((node) => {
+                node.setAttribute('aria-label', values[index]);
+              });
+          });
+        };
+        const stored = localStorage.getItem('modelforge-locale');
+        apply(
+          stored && copy[stored] ? stored : resolve(navigator.languages?.[0]),
+        );
+        addEventListener('modelforge:locale-change', (event) =>
+          apply(event.detail),
+        );
+      })();
+    </script>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const finish = () => root.classList.remove('app-booting');
+        const workspace = document.querySelector('.forge-shell');
+        if (workspace) {
+          if (workspace.dataset.hydrated === 'true') finish();
+          else addEventListener('modelforge:app-ready', finish, { once: true });
+        } else {
+          addEventListener(
+            'DOMContentLoaded',
+            () => requestAnimationFrame(finish),
+            { once: true },
+          );
+        }
+        setTimeout(finish, 5000);
+      })();
+    </script>
+  </body>
+</html>
+
+<style>
+  .startup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--surface-ground);
+    transition:
+      opacity 120ms ease-out,
+      visibility 0s linear 120ms;
+  }
+
+  :global(html.app-booting) .startup-overlay {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .startup-mark {
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+  }
+
+  .startup-mark > span {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .startup-mark i {
+    width: 0.38rem;
+    height: 0.38rem;
+    display: block;
+    border-radius: 50%;
+    background: var(--route-contact);
+    animation: startup-signal 900ms ease-in-out infinite alternate;
+  }
+
+  .startup-mark i:nth-child(2) {
+    animation-delay: 150ms;
+  }
+
+  .startup-mark i:nth-child(3) {
+    animation-delay: 300ms;
+  }
+
+  @keyframes startup-signal {
+    from {
+      opacity: 0.35;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-0.18rem);
+    }
+  }
+
+  .site-header,
+  .site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: calc(100% - 1rem);
+    margin-inline: auto;
+  }
+
+  .site-header {
+    min-height: 5.25rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    overflow: hidden;
+    position: relative;
+    border: 0;
+    background: var(--line-strong);
+    clip-path: polygon(
+      10px 0,
+      calc(100% - 10px) 0,
+      100% 10px,
+      100% calc(100% - 10px),
+      calc(100% - 10px) 100%,
+      10px 100%,
+      0 calc(100% - 10px),
+      0 10px
+    );
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    z-index: 0;
+    background: var(--surface-chassis);
+    clip-path: polygon(
+      9px 0,
+      calc(100% - 9px) 0,
+      100% 9px,
+      100% calc(100% - 9px),
+      calc(100% - 9px) 100%,
+      9px 100%,
+      0 calc(100% - 9px),
+      0 9px
+    );
+    pointer-events: none;
+  }
+
+  .site-header > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 2;
+    padding-right: 2rem;
+    background: var(--surface-chassis);
+  }
+
+  .site-footer {
+    padding-block: 1.5rem;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.875rem;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink-strong);
+    font-size: clamp(1.65rem, 2.5vw, 2.35rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    text-decoration: none;
+  }
+
+  .wordmark img {
+    width: 1.65rem;
+    height: 1.65rem;
+    flex: none;
+  }
+
+  .local-only {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--line-soft);
+    background: var(--surface-raised);
+    color: var(--ink-strong);
+    font-size: 0.82rem;
+  }
+
+  .local-only i {
+    width: 0.85rem;
+    height: 0.85rem;
+    border: 1px dashed var(--route-primary);
+    border-radius: 50%;
+  }
+
+  .product-line {
+    position: relative;
+    z-index: 2;
+    color: var(--ink-muted);
+    font: 650 0.68rem var(--font-code);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  nav a {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    color: var(--ink-body);
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.25rem;
+  }
+
+  @media (max-width: 42rem) {
+    .site-header,
+    .site-footer {
+      align-items: flex-start;
+      flex-direction: column;
+      padding-block: 0.75rem;
+    }
+    .site-header {
+      min-height: 4.25rem;
+    }
+    .local-only {
+      display: none;
+    }
+    .wordmark {
+      font-size: 1.5rem;
+    }
+  }
+</style>

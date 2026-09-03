@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page not found | ModelForge"
+  description="The requested ModelForge page could not be found."
+  pathname="/404"
+>
+  <main class="not-found">
+    <span>404 · OPEN CIRCUIT</span><h1>That route is not connected.</h1><p>
+      Return to a supported converter.
+    </p><nav>
+      <a href="/">ModelForge home</a><a href="/json-to-typescript"
+        >JSON to TypeScript</a
+      ><a href="/json-to-java">JSON to Java</a><a href="/json-to-spring-boot"
+        >JSON to Spring Boot</a
+      ><a href="/json-to-csharp">JSON to C#</a><a href="/json-to-python"
+        >JSON to Python</a
+      >
+    </nav>
+  </main>
+</BaseLayout>
+<style>
+  .not-found {
+    width: min(calc(100% - 2rem), 55rem);
+    min-height: 65vh;
+    margin: 4rem auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  span {
+    color: var(--route-primary);
+    font: 700 0.7rem var(--font-code);
+    letter-spacing: 0.1em;
+  }
+  h1 {
+    color: var(--ink-strong);
+    font-size: clamp(2rem, 6vw, 4rem);
+    margin: 0.5rem 0;
+  }
+  p {
+    color: var(--ink-muted);
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  a {
+    color: var(--route-primary);
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--line-soft);
+    text-decoration: none;
+  }
+</style>

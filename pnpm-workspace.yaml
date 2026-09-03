@@ -1,0 +1,19 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  esbuild: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - astro@7.2.9
+  - '@testing-library/react@16.3.3'
+
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+
+peerDependencyRules:
+  allowedVersions:
+    'eslint-plugin-jsx-a11y>eslint': '10'

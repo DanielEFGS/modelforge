@@ -1,0 +1,10 @@
+.astro
+.impeccable
+*.md
+coverage
+dist
+node_modules
+playwright-report
+pnpm-lock.yaml
+test-results
+fixtures/input/invalid.json
