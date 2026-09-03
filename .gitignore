@@ -8,6 +8,11 @@ dist/
 coverage/
 playwright-report/
 test-results/
+**/target/
+**/__pycache__/
+*.class
+*.jar
+*.pyc
 .env
 .env.*
 !.env.example
